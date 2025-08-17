@@ -18,16 +18,14 @@
       --brand2:#22d3ee;
       --text:#E6EDF6;
       --muted:#9AA4B2;
-      --ok:#22c55e; --warn:#eab308; --bad:#ef4444;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0; font-family: Outfit, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
-      color:var(--text); background: var(--bg); overflow: hidden;
+      color:var(--text); background: var(--bg); overflow-x: hidden;
     }
 
-    /* Layout */
     .shell{position:relative; min-height:100%; padding: clamp(16px, 3vw, 32px);} 
     .header{display:flex; align-items:center; justify-content:center; gap:16px; margin: clamp(8px,2vh,18px) 0 24px;}
     .logo{display:grid; place-items:center; width:56px; height:56px; border-radius:16px; background:var(--glass);
@@ -63,43 +61,7 @@
     .card p{ position:relative; z-index:1; margin:0; color:var(--muted) }
     .badge{ position:absolute; right:18px; top:18px; z-index:1; font-size:12px; padding:6px 10px; border-radius:999px; background:rgba(34,211,238,.15); border:1px solid rgba(34,211,238,.35)}
 
-    /* Screens */
-    .screen{ position:fixed; inset:0; display:none; place-items:center; padding: clamp(16px, 3vw, 28px); backdrop-filter: blur(8px);
-      background: radial-gradient(1200px 900px at 50% -10%, rgba(59,130,246,.15), transparent 40%), rgba(2,6,23,.75);
-      z-index:50; }
-    .screen.active{ display:grid; }
-    .panel{ width:min(100%, 920px); background: var(--glass); border:1px solid var(--stroke); border-radius:28px;
-      box-shadow: var(--glow); padding: clamp(12px, 2vw, 22px); }
-
-    .panel-header{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 6px 12px;}
-    .panel-title{ font-weight:800; letter-spacing:.4px; font-size: clamp(18px, 2.2vw, 24px);}  
-    .chip{ font-size:12px; padding:6px 10px; border-radius:999px; background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); }
-    .btn{ all:unset; display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:14px; border:1px solid var(--stroke);
-      background: var(--glass); cursor:pointer; transition: .2s ease; }
-    .btn:hover{ border-color: rgba(255,255,255,.24) }
-
-    .panel-body{ display:grid; gap:16px; grid-template-columns: 1fr 260px; }
-    @media (max-width:960px){ .panel-body{ grid-template-columns: 1fr; }}
-
-    /* Snake */
-    .canvas-wrap{ display:grid; place-items:center; background: #020617; border:1px solid var(--stroke); border-radius:22px; padding:10px }
-    canvas#snake{ width: min(92vw, 520px); aspect-ratio: 1/1; image-rendering: pixelated; }
-    .hud{ display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
-    .stat{ font-variant-numeric: tabular-nums; }
-    .controls{ display:grid; grid-template-columns: repeat(3, 64px); grid-template-rows: repeat(3, 64px); gap:8px; place-items:center; justify-content:center; margin-top:6px; }
-    .pad{ width:64px; height:64px; display:grid; place-items:center; border-radius:14px; border:1px solid var(--stroke); background: rgba(255,255,255,.06); cursor:pointer }
-    .pad:active{ transform: scale(.98) }
-
-    /* Puzzle */
-    .puzzle{ width:min(92vw, 520px); aspect-ratio:1/1; display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; padding:8px; background:#020617; border-radius:22px; border:1px solid var(--stroke) }
-    .tile{ position:relative; display:grid; place-items:center; font-size: clamp(22px, 6vw, 36px); font-weight:800; border-radius:18px; user-select:none; cursor:pointer;
-      background: linear-gradient(135deg, rgba(59,130,246,.25), rgba(34,211,238,.18));
-      border:1px solid rgba(255,255,255,.14); box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
-    }
-    .tile.empty{ background: transparent; border:1px dashed rgba(255,255,255,.16); cursor:default }
-
     .footer{position:fixed; left:0; right:0; bottom:8px; text-align:center; color:var(--muted); font-size:12px}
-    .kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; background: rgba(255,255,255,.06); padding:2px 6px; border-radius:6px; border:1px solid rgba(255,255,255,.14)}
   </style>
 </head>
 <body>
@@ -108,274 +70,96 @@
       <div class="logo"><span>XS</span></div>
       <div>
         <h1 class="title">XS SUPER APP</h1>
-        <div class="subtitle">Pick a game to play. Clean UI • Works on mobile & desktop</div>
+        <div class="subtitle">• Pick a game to play • SAMARTH •  Built for you ✨</div>
       </div>
     </header>
 
     <main class="grid">
-      <article class="card" id="openSnake" tabindex="0" aria-label="Open Legends of Snake">
+      <article class="card" id="openSnake" tabindex="0" aria-label="Open Snake Game">
         <div class="ink"></div>
         <span class="badge">Arcade</span>
         <h2>LEGENDS OF SNAKE</h2>
         <p>Classic snake with smooth controls, score & speed ups.</p>
       </article>
 
-      <article class="card" id="openPuzzle" tabindex="0" aria-label="Open Imagine 3×3">
+      <article class="card" id="openPuzzle" tabindex="0" aria-label="Open Puzzle Game">
         <div class="ink"></div>
         <span class="badge">Puzzle</span>
         <h2>IMAGINE 3×3</h2>
         <p>Slide the tiles into order. Clean, satisfying, solvable.</p>
       </article>
+
+      <article class="card" tabindex="0" aria-label="Game 3">
+        <div class="ink"></div>
+        <span class="badge">Action</span>
+        <h2>GALAXY BLASTER</h2>
+        <p>Space shooting fun with endless waves of enemies.</p>
+      </article>
+
+      <article class="card" tabindex="0" aria-label="Game 4">
+        <div class="ink"></div>
+        <span class="badge">Strategy</span>
+        <h2>TOWER DEFENSE</h2>
+        <p>Protect your base with smart defense towers.</p>
+      </article>
+
+      <article class="card" tabindex="0" aria-label="Game 5">
+        <div class="ink"></div>
+        <span class="badge">Puzzle</span>
+        <h2>WORD MASTER</h2>
+        <p>Challenge your brain with word puzzles and riddles.</p>
+      </article>
+
+      <article class="card" tabindex="0" aria-label="Game 6">
+        <div class="ink"></div>
+        <span class="badge">Arcade</span>
+        <h2>BRICK BREAKER</h2>
+        <p>Smash through walls of bricks with a bouncing ball.</p>
+      </article>
+
+      <article class="card" tabindex="0" aria-label="Game 7">
+        <div class="ink"></div>
+        <span class="badge">Racing</span>
+        <h2>STREET RACER</h2>
+        <p>High-speed racing action with nitro boosts.</p>
+      </article>
+
+      <article class="card" tabindex="0" aria-label="Game 8">
+        <div class="ink"></div>
+        <span class="badge">Adventure</span>
+        <h2>TREASURE HUNT</h2>
+        <p>Explore mysterious lands and find hidden treasures.</p>
+      </article>
+
+      <article class="card" tabindex="0" aria-label="Game 9">
+        <div class="ink"></div>
+        <span class="badge">Arcade</span>
+        <h2>FLAPPY BIRD</h2>
+        <p>Tap to fly and dodge obstacles for a high score.</p>
+      </article>
+
+      <article class="card" tabindex="0" aria-label="Game 10">
+        <div class="ink"></div>
+        <span class="badge">Sports</span>
+        <h2>PENALTY SHOOTOUT</h2>
+        <p>Test your aim and reflexes in penalty kicks.</p>
+      </article>
     </main>
   </div>
 
-  <!-- Snake Screen -->
-  <section class="screen" id="snakeScreen" aria-hidden="true">
-    <div class="panel" role="dialog" aria-modal="true" aria-labelledby="snakeTitle">
-      <div class="panel-header">
-        <div class="panel-title" id="snakeTitle">LEGENDS OF SNAKE</div>
-        <div class="hud">
-          <span class="chip stat">Score: <b id="score">0</b></span>
-          <span class="chip stat">Best: <b id="best">0</b></span>
-          <span class="chip stat">Speed: <b id="speed">1×</b></span>
-        </div>
-        <div style="display:flex; gap:8px">
-          <button class="btn" id="btnPause">⏸ Pause</button>
-          <button class="btn" id="btnRestart">🔄 Restart</button>
-          <button class="btn" data-close="#snakeScreen">✕ Close</button>
-        </div>
-      </div>
-      <div class="panel-body">
-        <div class="canvas-wrap">
-          <canvas id="snake" width="480" height="480"></canvas>
-        </div>
-        <div>
-          <div class="chip" style="margin-bottom:8px">Controls</div>
-          <div style="color:var(--muted); font-size:14px; line-height:1.6">
-            Use <span class="kbd">W A S D</span> or <span class="kbd">↑ ← ↓ →</span>. On mobile, tap the pad.
-          </div>
-          <div class="controls" aria-hidden="false">
-            <div></div>
-            <button class="pad" data-dir="up">▲</button>
-            <div></div>
-            <button class="pad" data-dir="left">◀</button>
-            <button class="pad" data-dir="down">▼</button>
-            <button class="pad" data-dir="right">▶</button>
-            <div></div>
-            <div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Puzzle Screen -->
-  <section class="screen" id="puzzleScreen" aria-hidden="true">
-    <div class="panel" role="dialog" aria-modal="true" aria-labelledby="puzzleTitle">
-      <div class="panel-header">
-        <div class="panel-title" id="puzzleTitle">IMAGINE 3×3</div>
-        <div class="hud">
-          <span class="chip stat">Moves: <b id="moves">0</b></span>
-          <span class="chip stat">Time: <b id="time">00:00</b></span>
-        </div>
-        <div style="display:flex; gap:8px">
-          <button class="btn" id="btnShuffle">🔀 Shuffle</button>
-          <button class="btn" data-close="#puzzleScreen">✕ Close</button>
-        </div>
-      </div>
-      <div class="panel-body">
-        <div class="puzzle" id="puzzle" aria-label="3 by 3 sliding puzzle"></div>
-        <div>
-          <div class="chip" style="margin-bottom:8px">How to play</div>
-          <div style="color:var(--muted); font-size:14px; line-height:1.6">
-            Tap a numbered tile next to the empty space to slide it. Arrange 1 → 8 with the empty space at the end.
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="footer">Tip: Press <span class="kbd">Esc</span> to go back • Built for you ✨</div>
+  <div class="footer">© SAMARTH 2025</div>
 
   <script>
-    /* ---------- Navigation */
-    const snakeScreen = document.querySelector('#snakeScreen');
-    const puzzleScreen = document.querySelector('#puzzleScreen');
     const openSnake = document.querySelector('#openSnake');
     const openPuzzle = document.querySelector('#openPuzzle');
 
-    function open(screen){ screen.classList.add('active'); screen.setAttribute('aria-hidden', 'false'); }
-    function close(screen){ screen.classList.remove('active'); screen.setAttribute('aria-hidden', 'true'); }
-
-    document.querySelectorAll('[data-close]').forEach(btn=>{
-      btn.addEventListener('click', (e)=>{
-        const id = btn.getAttribute('data-close');
-        const scr = document.querySelector(id);
-        close(scr);
-        if(scr===snakeScreen) snakeGame.reset(true);
-        if(scr===puzzleScreen) stopTimer();
-      });
+    openSnake.addEventListener('click', ()=>{
+      alert('Snake Game screen placeholder. Insert your game code here.');
     });
 
-    openSnake.addEventListener('click', ()=>{ open(snakeScreen); snakeGame.start(); });
-    openPuzzle.addEventListener('click', ()=>{ open(puzzleScreen); newGame(); });
-
-    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ close(snakeScreen); close(puzzleScreen); } });
-
-    /* ---------- Snake Game */
-    const canvas = document.getElementById('snake');
-    const ctx = canvas.getContext('2d');
-    const scoreEl = document.getElementById('score');
-    const bestEl  = document.getElementById('best');
-    const speedEl = document.getElementById('speed');
-
-    const S = 20; // cell size
-    const CELLS = canvas.width / S;
-
-    const snakeGame = (()=>{
-      let snake, dir, food, loop, speed, score, best = +localStorage.getItem('xs_best')||0, alive=true, paused=false;
-      bestEl.textContent = best;
-
-      function init(){
-        snake=[{x:10,y:10}];
-        dir={x:1,y:0};
-        food=spawnFood();
-        speed=110; score=0; alive=true; paused=false; updateHUD();
-        clearInterval(loop); loop=setInterval(tick, speed);
-        draw();
-      }
-      function reset(silent){ clearInterval(loop); if(!silent) init(); }
-      function start(){ init(); }
-
-      function spawnFood(){
-        let p; do{
-          p={x:Math.floor(Math.random()*CELLS), y:Math.floor(Math.random()*CELLS)};
-        }while(snake.some(s=>s.x===p.x&&s.y===p.y));
-        return p;
-      }
-
-      function setDir(nx,ny){ if((-nx===dir.x && -ny===dir.y)) return; dir={x:nx,y:ny}; }
-
-      function tick(){ if(paused||!alive) return; step(); draw(); }
-
-      function step(){
-        const head={x:snake[0].x+dir.x, y:snake[0].y+dir.y};
-        // wrap around edges
-        head.x=(head.x+CELLS)%CELLS; head.y=(head.y+CELLS)%CELLS;
-        // collision with body
-        if(snake.some((s,i)=>i&&s.x===head.x&&s.y===head.y)){ alive=false; gameOver(); return; }
-        snake.unshift(head);
-        if(head.x===food.x && head.y===food.y){
-          score++; if(score%5===0 && speed>60){ speed-=5; clearInterval(loop); loop=setInterval(tick, speed); }
-          speedEl.textContent = (110/speed).toFixed(1)+'×';
-          food=spawnFood();
-        } else { snake.pop(); }
-        updateHUD();
-      }
-
-      function draw(){
-        // bg
-        ctx.fillStyle = '#0b1220'; ctx.fillRect(0,0,canvas.width,canvas.height);
-        // grid (subtle)
-        ctx.strokeStyle = 'rgba(255,255,255,.04)';
-        ctx.lineWidth = 1;
-        for(let i=0;i<=CELLS;i++){ ctx.beginPath(); ctx.moveTo(i*S,0); ctx.lineTo(i*S,canvas.height); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0,i*S); ctx.lineTo(canvas.width,i*S); ctx.stroke(); }
-        // food
-        ctx.fillStyle = '#22d3ee'; ctx.fillRect(food.x*S+2, food.y*S+2, S-4, S-4);
-        // snake
-        snake.forEach((p,i)=>{
-          const c = i===0? '#93c5fd' : '#60a5fa';
-          ctx.fillStyle = c; ctx.fillRect(p.x*S+2, p.y*S+2, S-4, S-4);
-        });
-      }
-
-      function updateHUD(){ scoreEl.textContent=score; bestEl.textContent=best; }
-      function togglePause(){ paused=!paused; document.getElementById('btnPause').textContent = paused? '▶ Resume':'⏸ Pause'; }
-
-      function gameOver(){
-        if(score>best){ best=score; localStorage.setItem('xs_best', best); }
-        updateHUD();
-        const msg = `Game Over! Score ${score}.`;
-        document.getElementById('btnPause').textContent='⏸ Pause';
-        paused=true;
-        setTimeout(()=>{ alert(msg); paused=false; init(); }, 50);
-      }
-
-      return { start, reset, setDir, togglePause };
-    })();
-
-    // Keyboard + on-screen controls
-    window.addEventListener('keydown', (e)=>{
-      if(!snakeScreen.classList.contains('active')) return;
-      const k=e.key.toLowerCase();
-      if(k==='w'||e.key==='ArrowUp') snakeGame.setDir(0,-1);
-      else if(k==='s'||e.key==='ArrowDown') snakeGame.setDir(0,1);
-      else if(k==='a'||e.key==='ArrowLeft') snakeGame.setDir(-1,0);
-      else if(k==='d'||e.key==='ArrowRight') snakeGame.setDir(1,0);
-      else if(k===' '||k==='p') snakeGame.togglePause();
+    openPuzzle.addEventListener('click', ()=>{
+      alert('Puzzle Game screen placeholder. Insert your game code here.');
     });
-    document.getElementById('btnPause').onclick = ()=> snakeGame.togglePause();
-    document.getElementById('btnRestart').onclick = ()=> snakeGame.reset();
-    document.querySelectorAll('.pad').forEach(b=> b.addEventListener('click', ()=>{
-      const d=b.getAttribute('data-dir');
-      const map={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
-      snakeGame.setDir(...map[d]);
-    }));
-
-    /* ---------- 3x3 Sliding Puzzle */
-    const puzzle = document.getElementById('puzzle');
-    const movesEl = document.getElementById('moves');
-    const timeEl  = document.getElementById('time');
-
-    let state = [], moves=0, ticking=false, startTs=0, timerId;
-
-    function stopTimer(){ ticking=false; clearInterval(timerId); }
-    function startTimer(){ ticking=true; startTs=Date.now(); timerId=setInterval(()=>{
-      const t = Math.floor((Date.now()-startTs)/1000); const m=String(Math.floor(t/60)).padStart(2,'0'); const s=String(t%60).padStart(2,'0'); timeEl.textContent=`${m}:${s}`;
-    }, 250); }
-
-    function inversions(arr){ let inv=0; for(let i=0;i<arr.length;i++) for(let j=i+1;j<arr.length;j++) if(arr[i]&&arr[j]&&arr[i]>arr[j]) inv++; return inv; }
-    function solvable(arr){ return inversions(arr)%2===0; }
-
-    function render(){
-      puzzle.innerHTML='';
-      state.forEach((n,idx)=>{
-        const tile=document.createElement('div');
-        tile.className='tile'+(n===0?' empty':'');
-        tile.textContent=n||'';
-        tile.setAttribute('data-idx', idx);
-        tile.onclick=()=>move(idx);
-        puzzle.appendChild(tile);
-      });
-    }
-
-    function shuffle(){
-      const arr=[1,2,3,4,5,6,7,8,0];
-      do{ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } }while(!solvable(arr) || isSolved(arr));
-      state=arr; moves=0; movesEl.textContent=moves; timeEl.textContent='00:00'; stopTimer(); startTimer(); render();
-    }
-
-    function idxToRC(i){ return [Math.floor(i/3), i%3]; }
-    function rcToIdx(r,c){ return r*3+c; }
-
-    function move(i){
-      const empty = state.indexOf(0);
-      const [er,ec] = idxToRC(empty); const [r,c]=idxToRC(i);
-      const dist = Math.abs(er-r)+Math.abs(ec-c);
-      if(dist!==1) return; // must be adjacent
-      [state[empty], state[i]] = [state[i], state[empty]];
-      moves++; movesEl.textContent=moves; render();
-      if(isSolved(state)){ stopTimer(); setTimeout(()=>alert(`Great! Solved in ${moves} moves, time ${timeEl.textContent}`), 120); }
-    }
-
-    function isSolved(arr){ return arr.every((v,i)=> v===((i+1)%9)); }
-
-    function newGame(){ shuffle(); }
-
-    document.getElementById('btnShuffle').addEventListener('click', shuffle);
-
-    // Ready
-    // (We create the puzzle only when opened)
   </script>
 </body>
 </html>
