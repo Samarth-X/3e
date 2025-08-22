@@ -9,157 +9,133 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg: radial-gradient(1200px 800px at 10% 10%, #2dd4bf30 0%, #0ea5e920 40%, #8b5cf620 70%, #000 100%),
-            linear-gradient(135deg, #0f172a 0%, #020617 60%);
-      --glass: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
-      --stroke: rgba(255,255,255,.14);
-      --glow: 0 10px 30px rgba(59,130,246,.35), inset 0 0 0 1px rgba(255,255,255,.06);
-      --brand: #60a5fa;
-      --brand2:#22d3ee;
-      --text:#E6EDF6;
-      --muted:#9AA4B2;
+      /* Background simplified to remove bottom rectangular shade */
+      --bg: radial-gradient(900px 600px at 20% 0%, rgba(96,165,250,.14), transparent 60%),
+            radial-gradient(900px 600px at 80% 0%, rgba(34,211,238,.10), transparent 60%),
+            #0b1220; /* deep base with no banding */
+      --glass: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+      --stroke: rgba(255,255,255,.12);
+      /* Softer outer shadow so stacked cards don't create a big dark band */
+      --glow: 0 8px 22px rgba(0,0,0,.38), inset 0 0 0 1px rgba(255,255,255,.05);
+      --brand:#60a5fa; --brand2:#22d3ee; --text:#E6EDF6; --muted:#9AA4B2;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family: Outfit, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
-      color:var(--text); background: var(--bg); overflow-x: hidden;
-    }
+    *{box-sizing:border-box; margin:0; padding:0}
+    html,body{height:auto; scroll-behavior:smooth}
+    body{font-family:Outfit,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;color:var(--text);background:var(--bg);overflow-x:hidden}
 
-    .shell{position:relative; min-height:100%; padding: clamp(16px, 3vw, 32px);} 
-    .header{display:flex; align-items:center; justify-content:center; gap:16px; margin: clamp(8px,2vh,18px) 0 24px;}
-    .logo{display:grid; place-items:center; width:56px; height:56px; border-radius:16px; background:var(--glass);
-      backdrop-filter: blur(10px); box-shadow: var(--glow); border:1px solid var(--stroke)}
-    .logo span{font-weight:800; letter-spacing:.5px; font-size:14px; background: linear-gradient(90deg, var(--brand), var(--brand2)); -webkit-background-clip:text; background-clip:text; color:transparent}
+    .fade-in{opacity:0; transform:translateY(16px); animation:fadeUp .6s forwards}
+    @keyframes fadeUp{to{opacity:1; transform:translateY(0)}}
 
-    h1.title{margin:0; font-size: clamp(28px, 5vw, 56px); letter-spacing:.5px; line-height:1;
-      background: linear-gradient(90deg, #fff, #93c5fd 40%, #22d3ee 70%, #a78bfa);
-      -webkit-background-clip:text; background-clip:text; color:transparent;
-      filter: drop-shadow(0 10px 24px rgba(59,130,246,.25));
-    }
-    .subtitle{margin-top:6px; text-align:center; color:var(--muted)}
+    .shell{padding:clamp(16px,3vw,32px)}
+    .header{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:28px;text-align:center}
+    .logo{display:grid;place-items:center;width:64px;height:64px;border-radius:20px;background:var(--glass);backdrop-filter:blur(12px);box-shadow:var(--glow);border:1px solid var(--stroke)}
+    .logo span{font-weight:800;font-size:16px;background:linear-gradient(90deg,var(--brand),var(--brand2));-webkit-background-clip:text;background-clip:text;color:transparent}
 
-    .grid{display:grid; grid-template-columns: repeat(2, minmax(260px, 1fr)); gap: clamp(16px, 2.8vw, 28px); max-width:1100px; margin: 0 auto;}
-    @media (max-width: 720px){ .grid{grid-template-columns: 1fr;} }
+    .title{font-size:clamp(28px,5vw,56px);letter-spacing:.5px;line-height:1.1;background:linear-gradient(90deg,#fff,#93c5fd 40%,#22d3ee 70%,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 10px 24px rgba(59,130,246,.18))}
+    .subtitle{margin-top:6px;font-size:15px;color:var(--muted)}
 
-    .card{
-      position:relative; overflow:hidden; border-radius:28px; padding:22px; min-height:180px; cursor:pointer;
-      background: var(--glass); border:1px solid var(--stroke); box-shadow: var(--glow);
-      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
-      isolation:isolate;
-    }
-    .card:hover{ transform: translateY(-4px); box-shadow: 0 20px 60px rgba(56,189,248,.25), inset 0 0 0 1px rgba(255,255,255,.16); border-color: rgba(255,255,255,.22) }
-    .card:active{ transform: translateY(0) scale(.99) }
+    /* === ALWAYS SINGLE COLUMN === */
+    .grid{display:grid;grid-template-columns:1fr;gap:clamp(14px,2vw,20px);max-width:760px;margin:0 auto}
 
-    .card .ink{ position:absolute; inset:-40%; background:
-      radial-gradient(360px 280px at 20% 30%, rgba(96,165,250,.25), transparent 60%),
-      radial-gradient(240px 200px at 80% 20%, rgba(34,211,238,.28), transparent 60%),
-      radial-gradient(360px 280px at 60% 80%, rgba(167,139,250,.22), transparent 65%);
-      filter: blur(26px); z-index:0;}
+    .card{position:relative;overflow:hidden;border-radius:28px;padding:24px;min-height:190px;cursor:pointer;background:var(--glass);border:1px solid var(--stroke);box-shadow:var(--glow);transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;isolation:isolate;backdrop-filter:blur(10px)}
+    .card:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+    .card:active{transform:scale(.99)}
 
-    .card h2{ position:relative; z-index:1; margin:12px 0 6px; font-size: clamp(22px, 3vw, 32px); }
-    .card p{ position:relative; z-index:1; margin:0; color:var(--muted) }
-    .badge{ position:absolute; right:18px; top:18px; z-index:1; font-size:12px; padding:6px 10px; border-radius:999px; background:rgba(34,211,238,.15); border:1px solid rgba(34,211,238,.35)}
+    /* keep subtle internal light but contained by overflow */
+    .card .ink{position:absolute;inset:-40%;background:
+      radial-gradient(320px 240px at 20% 30%, rgba(96,165,250,.22), transparent 60%),
+      radial-gradient(240px 200px at 80% 20%, rgba(34,211,238,.22), transparent 60%),
+      radial-gradient(320px 260px at 60% 80%, rgba(167,139,250,.18), transparent 65%);
+      filter:blur(24px);z-index:0;opacity:.9}
 
-    .footer{position:fixed; left:0; right:0; bottom:8px; text-align:center; color:var(--muted); font-size:12px}
+    .card h2{position:relative;z-index:1;margin:10px 0 6px;font-size:clamp(22px,3vw,30px);font-weight:700}
+    .card p{position:relative;z-index:1;margin:0;color:var(--muted);line-height:1.42}
+    .badge{position:absolute;right:18px;top:18px;z-index:1;font-size:12px;padding:6px 12px;border-radius:999px;background:rgba(34,211,238,.14);border:1px solid rgba(34,211,238,.35)}
+
+    footer{padding:18px;text-align:center;color:var(--muted);font-size:13px}
   </style>
 </head>
 <body>
   <div class="shell">
-    <header class="header">
+    <header class="header fade-in">
       <div class="logo"><span>XS</span></div>
-      <div>
-        <h1 class="title">XS SUPER APP</h1>
-        <div class="subtitle">• Pick a game to play • SAMARTH •  Built for you ✨</div>
-      </div>
+      <h1 class="title">XS SUPER APP</h1>
+      <div class="subtitle">• Pick a game to play • SAMARTH • Built for you ✨</div>
     </header>
 
-    <main class="grid">
-      <article class="card" id="openSnake" tabindex="0" aria-label="Open Snake Game">
+    <main class="grid fade-in" style="animation-delay:.1s">
+      <article class="card" onclick="location.href='snake1.html'">
         <div class="ink"></div>
         <span class="badge">Arcade</span>
         <h2>LEGENDS OF SNAKE</h2>
         <p>Classic snake with smooth controls, score & speed ups.</p>
       </article>
 
-      <article class="card" id="openPuzzle" tabindex="0" aria-label="Open Puzzle Game">
-        <div class="ink"></div>
-        <span class="badge">Puzzle</span>
-        <h2>IMAGINE 3×3</h2>
-        <p>Slide the tiles into order. Clean, satisfying, solvable.</p>
-      </article>
-
-      <article class="card" tabindex="0" aria-label="Game 3">
+      <article class="card" onclick="location.href='egg2.html'">
         <div class="ink"></div>
         <span class="badge">Action</span>
-        <h2>GALAXY BLASTER</h2>
-        <p>Space shooting fun with endless waves of enemies.</p>
+        <h2>EGG FIGHT</h2>
+        <p>Funny egg battle challenge for quick reflexes.</p>
       </article>
 
-      <article class="card" tabindex="0" aria-label="Game 4">
+      <article class="card" onclick="location.href='notes3.html'">
         <div class="ink"></div>
-        <span class="badge">Strategy</span>
-        <h2>TOWER DEFENSE</h2>
-        <p>Protect your base with smart defense towers.</p>
+        <span class="badge">Utility</span>
+        <h2>CALENDER</h2>
+        <p>Plan and manage events with ease.</p>
       </article>
 
-      <article class="card" tabindex="0" aria-label="Game 5">
+      <article class="card" onclick="location.href='search4.html'">
         <div class="ink"></div>
-        <span class="badge">Puzzle</span>
-        <h2>WORD MASTER</h2>
-        <p>Challenge your brain with word puzzles and riddles.</p>
+        <span class="badge">Tool</span>
+        <h2>SEARCH 1.0</h2>
+        <p>Find anything instantly with smart search.</p>
       </article>
 
-      <article class="card" tabindex="0" aria-label="Game 6">
-        <div class="ink"></div>
-        <span class="badge">Arcade</span>
-        <h2>BRICK BREAKER</h2>
-        <p>Smash through walls of bricks with a bouncing ball.</p>
-      </article>
-
-      <article class="card" tabindex="0" aria-label="Game 7">
-        <div class="ink"></div>
-        <span class="badge">Racing</span>
-        <h2>STREET RACER</h2>
-        <p>High-speed racing action with nitro boosts.</p>
-      </article>
-
-      <article class="card" tabindex="0" aria-label="Game 8">
-        <div class="ink"></div>
-        <span class="badge">Adventure</span>
-        <h2>TREASURE HUNT</h2>
-        <p>Explore mysterious lands and find hidden treasures.</p>
-      </article>
-
-      <article class="card" tabindex="0" aria-label="Game 9">
+      <article class="card" onclick="location.href='flappy5.html'">
         <div class="ink"></div>
         <span class="badge">Arcade</span>
-        <h2>FLAPPY BIRD</h2>
+        <h2>FLAPPY GUY</h2>
         <p>Tap to fly and dodge obstacles for a high score.</p>
       </article>
 
-      <article class="card" tabindex="0" aria-label="Game 10">
+      <article class="card" onclick="location.href='galaxy6.html'">
         <div class="ink"></div>
-        <span class="badge">Sports</span>
-        <h2>PENALTY SHOOTOUT</h2>
-        <p>Test your aim and reflexes in penalty kicks.</p>
+        <span class="badge">Action</span>
+        <h2>GALAXY WORLD</h2>
+        <p>Defeat alien ships in endless galaxy battles.</p>
+      </article>
+
+      <article class="card" onclick="location.href='car7.html'">
+        <div class="ink"></div>
+        <span class="badge">Racing</span>
+        <h2>POLICE CHASE</h2>
+        <p>Outrun cops in this thrilling car chase.</p>
+      </article>
+
+      <article class="card" onclick="location.href='type8.html'">
+        <div class="ink"></div>
+        <span class="badge">Typing</span>
+        <h2>TYPE WRITER</h2>
+        <p>Improve your typing speed with fun challenges.</p>
+      </article>
+
+      <article class="card" onclick="location.href='runner9.html'">
+        <div class="ink"></div>
+        <span class="badge">Adventure</span>
+        <h2>RUNNER</h2>
+        <p>Keep running and avoid obstacles endlessly.</p>
+      </article>
+
+      <article class="card" onclick="location.href='imagine10.html'">
+        <div class="ink"></div>
+        <span class="badge">Puzzle</span>
+        <h2>IMAGINE</h2>
+        <p>Slide the tiles into order. Clean & solvable.</p>
       </article>
     </main>
+
+    <footer>© SAMARTH 2025</footer>
   </div>
-
-  <div class="footer">© SAMARTH 2025</div>
-
-  <script>
-    const openSnake = document.querySelector('#openSnake');
-    const openPuzzle = document.querySelector('#openPuzzle');
-
-    openSnake.addEventListener('click', ()=>{
-      alert('Snake Game screen placeholder. Insert your game code here.');
-    });
-
-    openPuzzle.addEventListener('click', ()=>{
-      alert('Puzzle Game screen placeholder. Insert your game code here.');
-    });
-  </script>
 </body>
 </html>
