@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Snake Game</title>
+  <style>
+    body {
+      margin: 0;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+    canvas {
+      background: #a3d977; /* green board like Google snake */
+      touch-action: none;
+      width: 92vw;
+      max-width: 500px;
+      aspect-ratio: 1 / 1;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    #scoreBoard {
+      color: #333;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 6px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background: #28a745;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+  <div id="scoreBoard">Score: <span id="score">0</span> | High Score: <span id="highScore">0</span></div>
+  <canvas id="gameCanvas"></canvas>
+  <button onclick="startGame()">Start Game</button>
+  <button onclick="changeSnakeColor()">Change Snake Color</button>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    let size = Math.min(window.innerWidth * 0.92, 500);
+    canvas.width = size;
+    canvas.height = size;
+
+    const gridSize = 20;
+    let snake = [{ x: 100, y: 100 }];
+    let fruit = generateFruit();
+    let direction = "right";
+    let nextDirection = direction;
+    let moveDelay = 120;
+    let score = 0;
+    let highScore = localStorage.getItem("highScore") || 0;
+    document.getElementById("highScore").innerText = highScore;
+    let gameRunning = false;
+    let snakeColors = ["#00cc44"]; // Google snake green
+    let currentColorIndex = 0;
+
+    function generateFruit() {
+      let newFruit;
+      do {
+        newFruit = {
+          x: Math.floor(Math.random() * (canvas.width / gridSize)) * gridSize,
+          y: Math.floor(Math.random() * (canvas.height / gridSize)) * gridSize,
+          color: "#ff4d4d"
+        };
+      } while (snake.some(s => s.x === newFruit.x && s.y === newFruit.y));
+      return newFruit;
+    }
+
+    function gameLoop() {
+      if (!gameRunning) return;
+      if (isValidDirectionChange(nextDirection)) direction = nextDirection;
+      moveSnake();
+      drawGame();
+      setTimeout(gameLoop, moveDelay);
+    }
+
+    function isValidDirectionChange(newDir) {
+      return !(
+        (direction === "up" && newDir === "down") ||
+        (direction === "down" && newDir === "up") ||
+        (direction === "left" && newDir === "right") ||
+        (direction === "right" && newDir === "left")
+      );
+    }
+
+    function moveSnake() {
+      let head = { ...snake[0] };
+      if (direction === "up") head.y -= gridSize;
+      if (direction === "down") head.y += gridSize;
+      if (direction === "left") head.x -= gridSize;
+      if (direction === "right") head.x += gridSize;
+
+      snake.unshift(head);
+
+      if (head.x === fruit.x && head.y === fruit.y) {
+        fruit = generateFruit();
+        score++;
+        document.getElementById("score").innerText = score;
+        if (score > highScore) {
+          highScore = score;
+          localStorage.setItem("highScore", highScore);
+          document.getElementById("highScore").innerText = highScore;
+        }
+      } else {
+        snake.pop();
+      }
+
+      if (
+        head.x < 0 || head.x >= canvas.width ||
+        head.y < 0 || head.y >= canvas.height ||
+        checkCollision()
+      ) {
+        resetGame();
+      }
+    }
+
+    function checkCollision() {
+      return snake.slice(1).some(segment => segment.x === snake[0].x && segment.y === snake[0].y);
+    }
+
+    function resetGame() {
+      snake = [{ x: 100, y: 100 }];
+      direction = "right";
+      nextDirection = "right";
+      score = 0;
+      document.getElementById("score").innerText = score;
+      gameRunning = false;
+    }
+
+    function drawGame() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw fruit
+      ctx.fillStyle = fruit.color;
+      ctx.fillRect(fruit.x, fruit.y, gridSize, gridSize);
+
+      // Draw snake
+      for (let i = 0; i < snake.length; i++) {
+        const s = snake[i];
+        ctx.fillStyle = snakeColors[currentColorIndex];
+        if (i === 0) {
+          // Head with rounded corners
+          ctx.beginPath();
+          ctx.roundRect(s.x, s.y, gridSize, gridSize, 5);
+          ctx.fill();
+
+          // Eyes
+          ctx.fillStyle = "black";
+          const eyeSize = 3;
+          const offset = 4;
+          if (direction === "right" || direction === "left") {
+            const eyeY = s.y + offset;
+            ctx.beginPath();
+            ctx.arc(s.x + (direction === "right" ? 13 : 7), eyeY, eyeSize, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(s.x + (direction === "right" ? 13 : 7), eyeY + 8, eyeSize, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            const eyeX = s.x + offset;
+            ctx.beginPath();
+            ctx.arc(eyeX, s.y + (direction === "down" ? 13 : 7), eyeSize, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(eyeX + 8, s.y + (direction === "down" ? 13 : 7), eyeSize, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        } else {
+          ctx.fillRect(s.x, s.y, gridSize, gridSize);
+        }
+      }
+    }
+
+    // RoundRect polyfill
+    CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+      if (w < 2 * r) r = w / 2;
+      if (h < 2 * r) r = h / 2;
+      this.beginPath();
+      this.moveTo(x + r, y);
+      this.arcTo(x + w, y, x + w, y + h, r);
+      this.arcTo(x + w, y + h, x, y + h, r);
+      this.arcTo(x, y + h, x, y, r);
+      this.arcTo(x, y, x + w, y, r);
+      this.closePath();
+    }
+
+    function changeSnakeColor() {
+      // Just alternate between green and light green
+      snakeColors = ["#00cc44", "#00b33c"];
+      currentColorIndex = (currentColorIndex + 1) % snakeColors.length;
+    }
+
+    function startGame() {
+      if (!gameRunning) {
+        resetGame();
+        gameRunning = true;
+        gameLoop();
+      }
+    }
+
+    // Touch controls
+    let touchStartX, touchStartY;
+    document.addEventListener("touchstart", e => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    });
+    document.addEventListener("touchend", e => {
+      let dx = e.changedTouches[0].clientX - touchStartX;
+      let dy = e.changedTouches[0].clientY - touchStartY;
+      if (Math.abs(dx) > Math.abs(dy)) {
+        nextDirection = dx > 0 ? "right" : "left";
+      } else {
+        nextDirection = dy > 0 ? "down" : "up";
+      } 
+    });
+
+    // Keyboard controls for PC
+    document.addEventListener("keydown", e => {
+      const keyMap = {
+        ArrowUp: "up",
+        ArrowDown: "down",
+        ArrowLeft: "left",
+        ArrowRight: "right",
+        w: "up",
+        s: "down",
+        a: "left",
+        d: "right"
+      };
+      const dir = keyMap[e.key];
+      if (dir) nextDirection = dir;
+    });
+  </script>
+</body>
+</html>
