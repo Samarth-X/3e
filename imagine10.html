@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-4D4FYHR22K');
+</script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>XS</title>
+  <style>
+    body {
+      margin:0; padding:0;
+      background:#eef6f9; color:#333;
+      font-family:Arial,sans-serif;
+      text-align:center;
+    }
+    h1 { margin:1rem 0; }
+    #controls { margin-bottom:1rem; }
+    button {
+      background:#ff7f50; color:#fff; border:none;
+      padding:.6rem 1.2rem; margin:0 .4rem;
+      border-radius:5px; font-size:1rem;
+      cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2);
+    }
+    button:hover { background:#ff6333; }
+    #puzzle {
+      position:relative; margin:0 auto;
+      border:3px solid #ddd; background:#fff;
+      touch-action:none; box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    }
+    .piece {
+      position:absolute; box-shadow:1px 1px 4px rgba(0,0,0,0.3);
+      border-radius:4px; cursor:grab;
+      transition:left .2s, top .2s;
+      background-repeat:no-repeat;
+      background-size: cover;
+    }
+    .piece:active { cursor:grabbing; }
+    #completeMsg {
+      font-size:1.2rem;
+      color:green;
+      margin-top:1rem;
+      display:none;
+    }
+  </style>
+</head>
+<body>
+  <h1>IMAGINE 3x3</h1>
+  <div id="controls">
+    <button id="reshuffleBtn">Reshuffle</button>
+    <button id="nextBtn">Next Image</button>
+  </div>
+  <div id="puzzle"></div>
+  <div id="completeMsg">🎉 Puzzle Completed!</div>
+
+  <script>
+    const images = [
+      'https://t3.ftcdn.net/jpg/09/24/05/68/360_F_924056844_BieMRZnp0UVCJyTTaabgKAPBmPFItqIC.jpg',
+      'https://static.vecteezy.com/system/resources/thumbnails/023/291/773/small/the-whale-is-jumping-from-the-sea-with-ai-generated-free-photo.jpg',
+      'https://static.vecteezy.com/system/resources/thumbnails/051/953/787/small/a-majestic-lion-rests-on-a-rock-under-dramatic-clouds-showcasing-its-powerful-presence-photo.jpg',
+      'https://media.istockphoto.com/id/627066956/photo/polar-bear.jpg?s=612x612&w=0&k=20&c=Tiqcc0roCqLE5EM9hFdPHdPPM2IgooEX2UfhHJhWdUY=',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2j8ntw9b99FtMMrHvyMRsY0ZIIzxXtYZ7Sg&s',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT92El-DzOVdV81_PZtqkRWyeasedDAXAa5TQ&s',
+      'https://t3.ftcdn.net/jpg/09/03/38/72/360_F_903387225_dpbDwF34rtyaTpUAk4KKIOl7E79Ifblv.jpg',
+      'https://media.istockphoto.com/id/1008831236/photo/panoramic-view-of-marine-drive-at-dusk-mumbai-india.jpg?s=612x612&w=0&k=20&c=gZ_wmR5bWHCnbeGsXaXxPcv1XTmfGsYVcrzNzIr-aOY=',
+      'https://t3.ftcdn.net/jpg/00/83/92/82/360_F_83928200_mYGZqB0ozTtSS6J5EtW9834mjb5tLW6x.jpg',
+      'https://static.vecteezy.com/system/resources/thumbnails/046/123/844/small_2x/boy-in-day-of-the-dead-skull-makeup-wearing-a-large-sombrero-with-colorful-patterns-mexican-child-with-festive-face-paint-concept-of-cultural-celebration-tradition-halloween-photo.jpeg',
+      'https://cdn.pixabay.com/photo/2016/03/26/22/48/tree-1281680_1280.jpg',
+      'https://media.istockphoto.com/id/1492870105/photo/world-globe-planet-earth-map-sphere.jpg?s=612x612&w=0&k=20&c=5fiX-smn1x1HtKJimoj_sv5yZeuYS0vrurV3bsc6aXM=',
+      'https://www.shutterstock.com/image-vector/virtual-reality-alligator-vector-paleontology-600nw-2303842673.jpg',
+      'https://www.shutterstock.com/image-vector/bee-flying-insect-closeup-cartoon-600nw-2427706043.jpg',
+      'https://media.istockphoto.com/id/590299316/photo/south-beach-from-above.jpg?s=612x612&w=0&k=20&c=JMnTCJdJ4ZKPgl-Ksq8r3pI5mu97BVqRTYr78KaQPLQ=',
+      'https://t4.ftcdn.net/jpg/01/12/02/45/360_F_112024511_592k63TLJWM8jbvjTsEMJzTTu1mJ6Hf1.jpg',
+      'https://t4.ftcdn.net/jpg/00/56/68/39/360_F_56683917_DeFx2OYqu53bEiIHa0wbvOYDA4HirWJu.jpg',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXO6we1HTvkafVmfFU88Kr183YDjT-IeMb4w&s',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdNHInm9ftWj4rS75tqVTTn5LE2Knb951zOA&s',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKMeKgko0FbWuIZad1twglBRttvG8hzC5exw&s',
+      'https://t4.ftcdn.net/jpg/10/72/88/35/360_F_1072883583_N7xuXUUSoAucD8OzabI5ZXdGj4VlFV6y.jpg',
+      'https://www.shutterstock.com/image-vector/vector-realistic-illustration-big-white-600nw-1384543601.jpg',
+      'https://www.shutterstock.com/image-vector/cruise-big-ship-3d-model-600nw-1966867750.jpg',
+      'https://t4.ftcdn.net/jpg/14/50/01/59/360_F_1450015993_cVXAGbdpuFhQu1HDoP2KKyYOrrwat0bU.jpg',
+    ];
+
+    let imgIndex = 0;
+    const COLS = 3, ROWS = 3;
+    const puzzle       = document.getElementById('puzzle');
+    const reshuffleBtn = document.getElementById('reshuffleBtn');
+    const nextBtn      = document.getElementById('nextBtn');
+    const completeMsg  = document.getElementById('completeMsg');
+
+    let pw, ph, W, H, pieces = [];
+    let dragEl = null, offsetX = 0, offsetY = 0;
+    let origX = 0, origY = 0;
+
+    function init() {
+      puzzle.innerHTML = '';
+      completeMsg.style.display = 'none';
+      pieces = [];
+      const img = new Image();
+      img.crossOrigin = 'Anonymous';
+      img.onload = () => build(img);
+      img.src = images[imgIndex];
+    }
+
+    function build(img) {
+      const vw = window.innerWidth, vh = window.innerHeight;
+      let pct = vw < 600 ? 0.9 : 0.6;
+      let targetW = Math.min(vw * pct, 600);
+      let targetH = targetW * img.naturalHeight / img.naturalWidth;
+      if (targetH > vh * 0.7) {
+        targetH = vh * 0.7;
+        targetW = targetH * img.naturalWidth / img.naturalHeight;
+      }
+
+      W = Math.floor(targetW);
+      H = Math.floor(targetH);
+      puzzle.style.width  = W + 'px';
+      puzzle.style.height = H + 'px';
+
+      pw = Math.floor(W / COLS);
+      ph = Math.floor(H / ROWS);
+      W = pw * COLS;
+      H = ph * ROWS;
+      puzzle.style.width  = W + 'px';
+      puzzle.style.height = H + 'px';
+
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const d = document.createElement('div');
+          d.className = 'piece';
+          d.style.width  = pw + 'px';
+          d.style.height = ph + 'px';
+          d.style.left   = (c * pw) + 'px';
+          d.style.top    = (r * ph) + 'px';
+          d.style.backgroundImage    = `url(${images[imgIndex]})`;
+          d.style.backgroundSize     = `${W}px ${H}px`;
+          d.style.backgroundPosition = `-${c * pw}px -${r * ph}px`;
+          d.dataset.tx = c * pw;
+          d.dataset.ty = r * ph;
+          d.addEventListener('pointerdown', onDown);
+          puzzle.appendChild(d);
+          pieces.push(d);
+        }
+      }
+      shuffle();
+    }
+
+    function shuffle() {
+      const coords = [];
+      for (let r = 0; r < ROWS; r++)
+        for (let c = 0; c < COLS; c++)
+          coords.push({ x: c * pw, y: r * ph });
+      coords.sort(() => Math.random() - 0.5);
+      pieces.forEach((p, i) => {
+        p.style.left = coords[i].x + 'px';
+        p.style.top  = coords[i].y + 'px';
+      });
+    }
+
+    function onDown(e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      dragEl = e.currentTarget;
+      const rect = dragEl.getBoundingClientRect();
+      offsetX = e.clientX - rect.left;
+      offsetY = e.clientY - rect.top;
+      origX = parseFloat(dragEl.style.left);
+      origY = parseFloat(dragEl.style.top);
+      dragEl.setPointerCapture(e.pointerId);
+      dragEl.style.transition = 'none';
+      dragEl.style.zIndex = 1000;
+    }
+
+    function onMove(e) {
+      if (!dragEl) return;
+      const pRect = puzzle.getBoundingClientRect();
+      let x = e.clientX - pRect.left - offsetX;
+      let y = e.clientY - pRect.top  - offsetY;
+      x = Math.max(0, Math.min(x, W - pw));
+      y = Math.max(0, Math.min(y, H - ph));
+      dragEl.style.left = x + 'px';
+      dragEl.style.top  = y + 'px';
+    }
+
+    function onUp(e) {
+      if (!dragEl) return;
+      dragEl.releasePointerCapture(e.pointerId);
+      const x = parseFloat(dragEl.style.left);
+      const y = parseFloat(dragEl.style.top);
+      const c = Math.round(x / pw);
+      const r = Math.round(y / ph);
+      const tx = c * pw, ty = r * ph;
+
+      const other = pieces.find(p =>
+        p !== dragEl &&
+        parseFloat(p.style.left) === tx &&
+        parseFloat(p.style.top)  === ty
+      );
+
+      if (other) {
+        other.style.left = origX + 'px';
+        other.style.top  = origY + 'px';
+      }
+
+      dragEl.style.left = tx + 'px';
+      dragEl.style.top  = ty + 'px';
+
+      dragEl.style.transition = 'left .2s, top .2s';
+      dragEl.style.zIndex = '';
+      dragEl = null;
+      checkCompletion();
+    }
+
+    function checkCompletion() {
+      const allCorrect = pieces.every(p =>
+        parseFloat(p.style.left) === parseFloat(p.dataset.tx) &&
+        parseFloat(p.style.top)  === parseFloat(p.dataset.ty)
+      );
+      if (allCorrect) {
+        completeMsg.style.display = 'block';
+      }
+    }
+
+    document.addEventListener('pointermove', onMove);
+    document.addEventListener('pointerup',   onUp);
+    reshuffleBtn.addEventListener('click', shuffle);
+    nextBtn.addEventListener('click', () => {
+      imgIndex = (imgIndex + 1) % images.length;
+      init();
+    });
+    window.addEventListener('resize', () => { if (!dragEl) init(); });
+    init();
+  </script>
+</body>
+</html>
